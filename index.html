@@ -1,0 +1,506 @@
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--g:#00ff88;--g2:#00dd77;--g3:#00bb66;--r:#ff4466;--b:#22aaff;--am:#ffbb00;--dim:#080d08;--panel:#0c130c;--panel2:#111a11;--border:#1e301e;--txt:#e8ffe8;--muted:#6a9a6a;--bright:#ffffff}
+body{background:var(--dim);color:var(--txt);font-family:'Rajdhani',sans-serif;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,136,0.01) 2px,rgba(0,255,136,0.01) 4px);pointer-events:none;z-index:0}
+canvas#bg{position:fixed;inset:0;z-index:0;opacity:0.2}
+.wrap{position:relative;z-index:1;max-width:1000px;margin:0 auto;padding:0 24px 80px}
+
+nav{display:flex;align-items:center;justify-content:space-between;padding:20px 0;border-bottom:1px solid var(--border)}
+.logo{font-family:'Orbitron',monospace;font-size:13px;color:var(--g);letter-spacing:3px;font-weight:700}
+.nav-right{display:flex;align-items:center;gap:20px}
+.nav-links{display:flex;gap:18px}
+.nav-links a{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted);text-decoration:none;letter-spacing:2px;transition:color .2s}
+.nav-links a:hover{color:var(--g)}
+.lang-switch{display:flex;gap:2px}
+.lang-btn{font-family:'Share Tech Mono',monospace;font-size:10px;padding:4px 10px;background:transparent;border:1px solid var(--border);color:var(--muted);cursor:pointer;transition:all .2s;letter-spacing:1px}
+.lang-btn.active{border-color:var(--g);color:var(--g)}
+
+.hero{padding:52px 0 32px}
+.htag{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--g2);letter-spacing:3px;margin-bottom:14px}
+h1{font-family:'Orbitron',monospace;font-size:clamp(30px,5.5vw,60px);font-weight:900;line-height:1;color:var(--bright)}
+h1 span{color:var(--g)}
+.subtitle{font-family:'Share Tech Mono',monospace;font-size:12px;color:#a0c8a0;margin-top:12px;letter-spacing:1px;max-width:500px;line-height:1.9}
+.cta-row{display:flex;gap:12px;margin-top:26px;flex-wrap:wrap}
+.btn{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:2px;padding:10px 20px;border:1px solid var(--g);color:var(--g);background:transparent;cursor:pointer;transition:all .2s;text-decoration:none;display:inline-block}
+.btn:hover{background:rgba(0,255,136,.08)}
+.btn.solid{background:var(--g);color:#000;font-weight:700}
+.btn.solid:hover{background:#00ffaa}
+
+.status{display:flex;gap:20px;padding:12px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin:32px 0;flex-wrap:wrap}
+.stat{display:flex;align-items:center;gap:7px}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--g);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(0,255,136,.4)}50%{box-shadow:0 0 0 5px transparent}}
+.stat-label{font-family:'Share Tech Mono',monospace;font-size:10px;color:#8aaa8a;letter-spacing:1px}
+.stat-val{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--bright);letter-spacing:1px;font-weight:700}
+
+.metrics-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:1px;background:var(--border);margin:32px 0}
+.metric{background:var(--panel);padding:18px 16px}
+.m-val{font-family:'Orbitron',monospace;font-size:20px;font-weight:700;color:var(--g);line-height:1}
+.m-label{font-family:'Share Tech Mono',monospace;font-size:9px;color:#8aaa8a;letter-spacing:2px;margin-top:5px}
+
+.section{margin:52px 0}
+.sec-header{display:flex;align-items:center;gap:14px;margin-bottom:26px}
+.sec-num{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:2px}
+.sec-title{font-family:'Orbitron',monospace;font-size:16px;font-weight:700;color:var(--bright);letter-spacing:2px}
+.sec-line{flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent)}
+
+.term-wrap{background:var(--panel);border:1px solid var(--border);padding:0;overflow:hidden}
+.term-bar{background:#0a110a;padding:10px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border)}
+.term-dot{width:10px;height:10px;border-radius:50%}
+.term-title{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px;margin-left:8px}
+.term-body{padding:16px;min-height:200px;max-height:320px;overflow-y:auto;font-family:'Share Tech Mono',monospace;font-size:12px;line-height:1.8}
+.term-line{color:#a0c8a0;margin-bottom:2px}
+.term-line.cmd{color:var(--bright)}
+.term-line.g{color:var(--g)}
+.term-line.am{color:var(--am)}
+.term-line.b{color:var(--b)}
+.term-line.r{color:var(--r)}
+.term-line.dim{color:var(--muted)}
+.term-input-row{display:flex;align-items:center;gap:8px;padding:10px 16px;border-top:1px solid var(--border);background:#0a110a}
+.term-prompt{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--g);white-space:nowrap}
+.term-input{flex:1;background:transparent;border:none;outline:none;font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--bright);caret-color:var(--g)}
+
+.mode-switch{display:flex;gap:1px;margin-bottom:26px;background:var(--border)}
+.mode-btn{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:2px;padding:10px 24px;background:var(--panel);color:var(--muted);border:none;cursor:pointer;transition:all .2s;flex:1}
+.mode-btn.active{background:rgba(0,255,136,.07);color:var(--g)}
+.mode-view{display:none}
+.mode-view.active{display:block}
+
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border)}
+.hcard{background:var(--panel);padding:26px;transition:background .2s}
+.hcard:hover{background:var(--panel2)}
+.hc-tag{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--g2);letter-spacing:3px;margin-bottom:9px}
+.hc-title{font-family:'Orbitron',monospace;font-size:13px;font-weight:700;color:var(--bright);margin-bottom:7px}
+.hc-body{font-size:13px;color:#a0c0a0;line-height:1.8}
+.hc-pills{display:flex;flex-wrap:wrap;gap:5px;margin-top:12px}
+.pill{font-family:'Share Tech Mono',monospace;font-size:9px;color:#8aaa8a;padding:2px 8px;border:1px solid var(--border);letter-spacing:1px}
+
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:1px;background:var(--border)}
+.sk{background:var(--panel);padding:17px 15px;transition:background .2s}
+.sk:hover{background:var(--panel2)}
+.sk-cat{font-family:'Share Tech Mono',monospace;font-size:9px;color:#8aaa8a;letter-spacing:2px;margin-bottom:6px}
+.sk-name{font-size:14px;font-weight:600;color:var(--bright)}
+.sk-bar{height:2px;background:var(--border);margin-top:9px}
+.sk-fill{height:100%;transform-origin:left;animation:fb 1.4s ease forwards}
+@keyframes fb{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+
+.proj-grid{display:grid;gap:1px;background:var(--border)}
+.proj{background:var(--panel);padding:20px;transition:background .2s;cursor:pointer}
+.proj:hover{background:var(--panel2)}
+.proj-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px}
+.proj-title{font-family:'Orbitron',monospace;font-size:12px;font-weight:700;color:var(--bright);letter-spacing:1px}
+.proj-actions{display:flex;gap:6px;flex-shrink:0}
+.badge{font-family:'Share Tech Mono',monospace;font-size:9px;padding:3px 8px;letter-spacing:1px}
+.badge.closed{background:rgba(0,255,136,.07);color:var(--g2);border:1px solid rgba(0,255,136,.2)}
+.badge.re{background:rgba(255,187,0,.1);color:var(--am);border:1px solid rgba(255,187,0,.3)}
+.badge.research{background:rgba(34,170,255,.1);color:var(--b);border:1px solid rgba(34,170,255,.3)}
+.badge.report{background:rgba(255,68,102,.08);color:#ff8899;border:1px solid rgba(255,68,102,.25);cursor:pointer;transition:background .2s}
+.badge.report:hover{background:rgba(255,68,102,.18)}
+.proj-desc{font-size:13px;color:#a0c0a0;line-height:1.7}
+.proj-pills{display:flex;gap:5px;margin-top:10px;flex-wrap:wrap}
+
+.vuln-table{width:100%;border-collapse:collapse;font-family:'Share Tech Mono',monospace;font-size:11px}
+.vuln-table th{text-align:left;padding:8px 12px;color:#8aaa8a;letter-spacing:2px;border-bottom:1px solid var(--border);font-weight:400}
+.vuln-table td{padding:8px 12px;border-bottom:1px solid var(--border);color:var(--txt);vertical-align:top}
+.vuln-table tr:hover td{background:rgba(0,255,136,.02)}
+.sev{padding:2px 6px;font-size:9px;letter-spacing:1px}
+.sev.crit{background:rgba(255,68,102,.1);color:var(--r);border:1px solid rgba(255,68,102,.3)}
+.sev.high{background:rgba(255,187,0,.1);color:var(--am);border:1px solid rgba(255,187,0,.3)}
+.sev.med{background:rgba(34,170,255,.1);color:var(--b);border:1px solid rgba(34,170,255,.3)}
+.st-cl{color:var(--g);font-weight:700}
+
+.timeline{position:relative;padding-left:30px}
+.timeline::before{content:'';position:absolute;left:0;top:8px;bottom:0;width:1px;background:var(--border)}
+.tl-item{position:relative;margin-bottom:24px}
+.tl-dot{position:absolute;left:-34px;top:6px;width:8px;height:8px;background:var(--g)}
+.tl-year{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--g2);letter-spacing:2px;margin-bottom:3px}
+.tl-role{font-size:15px;font-weight:600;color:var(--bright);margin-bottom:2px}
+.tl-org{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:1px;margin-bottom:5px}
+.tl-body{font-size:13px;color:#a0c0a0;line-height:1.7}
+
+.contact-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:1px;background:var(--border)}
+.cc{background:var(--panel);padding:20px;transition:background .2s}
+.cc:hover{background:var(--panel2)}
+.cc-label{font-family:'Share Tech Mono',monospace;font-size:9px;color:#8aaa8a;letter-spacing:2px;margin-bottom:5px}
+.cc-val{font-size:14px;font-weight:600;color:var(--g)}
+
+footer{margin-top:64px;padding-top:18px;border-top:1px solid var(--border);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.ft{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:2px}
+
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:100;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.open{display:flex}
+.modal{background:var(--panel);border:1px solid var(--border);max-width:680px;width:100%;max-height:80vh;overflow-y:auto}
+.modal-head{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.modal-head-title{font-family:'Orbitron',monospace;font-size:13px;color:var(--bright);letter-spacing:1px}
+.modal-close{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted);cursor:pointer;padding:4px 10px;border:1px solid var(--border);transition:color .2s}
+.modal-close:hover{color:var(--r)}
+.modal-body{padding:20px;font-family:'Share Tech Mono',monospace;font-size:11px;line-height:2;color:#a0c8a0}
+.report-line{margin-bottom:3px}
+.report-head{color:var(--g);font-size:12px;margin-top:14px;margin-bottom:4px;letter-spacing:2px}
+.report-red{color:var(--r)}
+.report-am{color:var(--am)}
+.report-b{color:var(--b)}
+.redacted{background:#444;color:#444;border-radius:2px;letter-spacing:0;padding:0 4px}
+.redacted:hover{background:#555;color:#aaa}
+
+@media(max-width:580px){.two-col{grid-template-columns:1fr}.nav-links{display:none}}
+</style>
+
+<canvas id="bg"></canvas>
+<div class="wrap">
+
+<nav>
+  <div class="logo">UK // PORTFOLIO</div>
+  <div class="nav-right">
+    <div class="nav-links">
+      <a href="#terminal" data-key="nav_term">TERMINAL</a>
+      <a href="#about" data-key="nav_about">ABOUT</a>
+      <a href="#research" data-key="nav_research">RESEARCH</a>
+      <a href="#exp" data-key="nav_exp">CAREER</a>
+      <a href="#contact" data-key="nav_contact">CONTACT</a>
+    </div>
+    <div class="lang-switch">
+      <button class="lang-btn active" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" onclick="setLang('tr')">TR</button>
+      <button class="lang-btn" onclick="setLang('ru')">RU</button>
+    </div>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="htag" data-key="hero_tag"></div>
+  <h1>UMUT<br><span>KARAKAYA</span></h1>
+  <div class="subtitle" data-key="hero_sub"></div>
+  <div class="cta-row">
+    <a href="mailto:rootlxrd31@gmail.com" class="btn solid" data-key="cta_hire"></a>
+    <a href="https://www.linkedin.com/in/umut-k-853442321/" class="btn">LINKEDIN</a>
+  </div>
+</div>
+
+<div class="status">
+  <div class="stat"><div class="dot"></div><span class="stat-label" data-key="st_status_l"></span><span class="stat-val" data-key="st_status_v"></span></div>
+  <div class="stat"><div class="dot" style="background:var(--b);animation:none"></div><span class="stat-label" data-key="st_base_l"></span><span class="stat-val">ISTANBUL, TR</span></div>
+  <div class="stat"><div class="dot" style="background:var(--am);animation:none"></div><span class="stat-label" data-key="st_exp_l"></span><span class="stat-val" data-key="st_exp_v"></span></div>
+  <div class="stat"><div class="dot" style="background:var(--g2);animation:none"></div><span class="stat-label" data-key="st_lang_l"></span><span class="stat-val">TR / EN / RU</span></div>
+</div>
+
+<div class="metrics-row">
+  <div class="metric"><div class="m-val">100K+</div><div class="m-label" data-key="m1"></div></div>
+  <div class="metric"><div class="m-val">5,000+</div><div class="m-label" data-key="m2"></div></div>
+  <div class="metric"><div class="m-val">&lt;2h</div><div class="m-label" data-key="m3"></div></div>
+  <div class="metric"><div class="m-val">8+</div><div class="m-label" data-key="m4"></div></div>
+  <div class="metric"><div class="m-val">TR/MENA/CIS</div><div class="m-label" data-key="m5"></div></div>
+  <div class="metric"><div class="m-val">7+</div><div class="m-label" data-key="m6"></div></div>
+</div>
+
+<div class="section" id="terminal">
+  <div class="sec-header">
+    <span class="sec-num">00</span>
+    <span class="sec-title" data-key="sec_term"></span>
+    <div class="sec-line"></div>
+  </div>
+  <div class="term-wrap">
+    <div class="term-bar">
+      <div class="term-dot" style="background:#ff5f57"></div>
+      <div class="term-dot" style="background:#febc2e"></div>
+      <div class="term-dot" style="background:#28c840"></div>
+      <span class="term-title">umut@portfolio:~$</span>
+    </div>
+    <div class="term-body" id="term-output">
+      <div class="term-line g">Welcome to Umut Karakaya's portfolio terminal.</div>
+      <div class="term-line dim">Type <span style="color:var(--bright)">help</span> to see available commands.</div>
+    </div>
+    <div class="term-input-row">
+      <span class="term-prompt">umut@portfolio:~$</span>
+      <input class="term-input" id="term-input" type="text" autocomplete="off" spellcheck="false" placeholder="type a command...">
+    </div>
+  </div>
+</div>
+
+<div class="section" id="about">
+  <div class="sec-header">
+    <span class="sec-num">01</span>
+    <span class="sec-title" data-key="sec_about"></span>
+    <div class="sec-line"></div>
+  </div>
+  <div class="mode-switch">
+    <button class="mode-btn active" onclick="switchMode('cm')" data-key="mode_cm"></button>
+    <button class="mode-btn" onclick="switchMode('sec')" data-key="mode_sec"></button>
+  </div>
+  <div class="mode-view active" id="view-cm">
+    <div class="two-col">
+      <div class="hcard"><div class="hc-tag" data-key="cm1_tag"></div><div class="hc-title" data-key="cm1_title"></div><div class="hc-body" data-key="cm1_body"></div><div class="hc-pills"><span class="pill">Discord</span><span class="pill">Crisis Mgmt</span><span class="pill">SOP Design</span><span class="pill">LiveOps</span></div></div>
+      <div class="hcard"><div class="hc-tag" data-key="cm2_tag"></div><div class="hc-title" data-key="cm2_title"></div><div class="hc-body" data-key="cm2_body"></div><div class="hc-pills"><span class="pill">TR / EN / RU</span><span class="pill">Jira</span><span class="pill">Zendesk</span></div></div>
+      <div class="hcard"><div class="hc-tag" data-key="cm3_tag"></div><div class="hc-title" data-key="cm3_title"></div><div class="hc-body" data-key="cm3_body"></div><div class="hc-pills"><span class="pill">VALOFE</span><span class="pill">JoyGame</span><span class="pill">100K+ Members</span></div></div>
+      <div class="hcard"><div class="hc-tag" data-key="cm4_tag"></div><div class="hc-title" data-key="cm4_title"></div><div class="hc-body" data-key="cm4_body"></div><div class="hc-pills"><span class="pill">Incident Logs</span><span class="pill">Localization</span><span class="pill">Multilingual</span></div></div>
+    </div>
+  </div>
+  <div class="mode-view" id="view-sec">
+    <div class="two-col">
+      <div class="hcard"><div class="hc-tag" data-key="s1_tag"></div><div class="hc-title" data-key="s1_title"></div><div class="hc-body" data-key="s1_body"></div><div class="hc-pills"><span class="pill">IDA Pro</span><span class="pill">Wireshark</span><span class="pill">x64dbg</span></div></div>
+      <div class="hcard"><div class="hc-tag" data-key="s2_tag"></div><div class="hc-title" data-key="s2_title"></div><div class="hc-body" data-key="s2_body"></div><div class="hc-pills"><span class="pill">Responsible Disclosure</span><span class="pill">PCAP</span></div></div>
+      <div class="hcard"><div class="hc-tag" data-key="s3_tag"></div><div class="hc-title" data-key="s3_title"></div><div class="hc-body" data-key="s3_body"></div><div class="hc-pills"><span class="pill">C++</span><span class="pill">Python</span><span class="pill">Ghidra</span><span class="pill">WinDivert</span></div></div>
+      <div class="hcard"><div class="hc-tag" data-key="s4_tag"></div><div class="hc-title" data-key="s4_title"></div><div class="hc-body" data-key="s4_body"></div><div class="hc-pills"><span class="pill">nProtect GG</span><span class="pill">EAC</span><span class="pill">BattlEye</span></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="sec-header"><span class="sec-num">02</span><span class="sec-title" data-key="sec_skills"></span><div class="sec-line"></div></div>
+  <div class="skills-grid">
+    <div class="sk"><div class="sk-cat">RE / ANALYSIS</div><div class="sk-name" data-key="sk1">Reverse Engineering</div><div class="sk-bar"><div class="sk-fill" style="width:95%;background:var(--g)"></div></div></div>
+    <div class="sk"><div class="sk-cat">NETWORK</div><div class="sk-name" data-key="sk2">Packet Analysis</div><div class="sk-bar"><div class="sk-fill" style="width:92%;background:var(--am)"></div></div></div>
+    <div class="sk"><div class="sk-cat">TOOLS</div><div class="sk-name">IDA Pro / Ghidra</div><div class="sk-bar"><div class="sk-fill" style="width:90%;background:var(--b)"></div></div></div>
+    <div class="sk"><div class="sk-cat">DEV</div><div class="sk-name">C++ / C# / Python</div><div class="sk-bar"><div class="sk-fill" style="width:87%;background:var(--g)"></div></div></div>
+    <div class="sk"><div class="sk-cat">ANTI-CHEAT</div><div class="sk-name" data-key="sk3">Anti-Cheat Research</div><div class="sk-bar"><div class="sk-fill" style="width:88%;background:var(--r)"></div></div></div>
+    <div class="sk"><div class="sk-cat">COMMUNITY</div><div class="sk-name" data-key="sk4">LiveOps Management</div><div class="sk-bar"><div class="sk-fill" style="width:95%;background:var(--g)"></div></div></div>
+    <div class="sk"><div class="sk-cat">COMMUNITY</div><div class="sk-name" data-key="sk5">Moderation SOPs</div><div class="sk-bar"><div class="sk-fill" style="width:93%;background:var(--g)"></div></div></div>
+    <div class="sk"><div class="sk-cat">LOCALIZATION</div><div class="sk-name" data-key="sk6">TR / EN / RU</div><div class="sk-bar"><div class="sk-fill" style="width:97%;background:var(--am)"></div></div></div>
+  </div>
+</div>
+
+<div class="section" id="research">
+  <div class="sec-header"><span class="sec-num">03</span><span class="sec-title" data-key="sec_research"></span><div class="sec-line"></div></div>
+  <div class="proj-grid">
+    <div class="proj">
+      <div class="proj-top"><div class="proj-title" data-key="p1_title"></div><div class="proj-actions"><span class="badge report" onclick="openModal('m1')">VIEW REPORT</span><span class="badge closed">CLOSED</span></div></div>
+      <div class="proj-desc" data-key="p1_body"></div>
+      <div class="proj-pills"><span class="pill">WinDivert</span><span class="pill">TCP</span><span class="pill">Responsible Disclosure</span></div>
+    </div>
+    <div class="proj">
+      <div class="proj-top"><div class="proj-title" data-key="p2_title"></div><div class="proj-actions"><span class="badge report" onclick="openModal('m2')">VIEW REPORT</span><span class="badge closed">CLOSED</span></div></div>
+      <div class="proj-desc" data-key="p2_body"></div>
+      <div class="proj-pills"><span class="pill">Wireshark</span><span class="pill">XOR</span><span class="pill">Python</span><span class="pill">PCAP</span></div>
+    </div>
+    <div class="proj">
+      <div class="proj-top"><div class="proj-title" data-key="p3_title"></div><div class="proj-actions"><span class="badge closed">CLOSED</span></div></div>
+      <div class="proj-desc" data-key="p3_body"></div>
+      <div class="proj-pills"><span class="pill">Network Analysis</span><span class="pill">Security Report</span></div>
+    </div>
+    <div class="proj">
+      <div class="proj-top"><div class="proj-title" data-key="p4_title"></div><div class="proj-actions"><span class="badge re">RE</span></div></div>
+      <div class="proj-desc" data-key="p4_body"></div>
+      <div class="proj-pills"><span class="pill">IDA Pro</span><span class="pill">Zydis</span><span class="pill">OLLVM</span><span class="pill">C++</span></div>
+    </div>
+    <div class="proj">
+      <div class="proj-top"><div class="proj-title" data-key="p5_title"></div><div class="proj-actions"><span class="badge re">RE</span></div></div>
+      <div class="proj-desc" data-key="p5_body"></div>
+      <div class="proj-pills"><span class="pill">nProtect GG</span><span class="pill">Kernel</span></div>
+    </div>
+    <div class="proj">
+      <div class="proj-top"><div class="proj-title" data-key="p6_title"></div><div class="proj-actions"><span class="badge research">RESEARCH</span></div></div>
+      <div class="proj-desc" data-key="p6_body"></div>
+      <div class="proj-pills"><span class="pill">EAC</span><span class="pill">BattlEye</span><span class="pill">Wireshark</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="sec-header"><span class="sec-num">04</span><span class="sec-title" data-key="sec_vulns"></span><div class="sec-line"></div></div>
+  <table class="vuln-table">
+    <thead><tr><th data-key="vt_target"></th><th data-key="vt_finding"></th><th data-key="vt_sev"></th><th data-key="vt_status"></th></tr></thead>
+    <tbody>
+      <tr><td>MStar Global</td><td data-key="v1"></td><td><span class="sev crit">CRITICAL</span></td><td class="st-cl">CLOSED</td></tr>
+      <tr><td>MStar Global</td><td data-key="v2"></td><td><span class="sev crit">CRITICAL</span></td><td class="st-cl">CLOSED</td></tr>
+      <tr><td>MStar Global</td><td data-key="v3"></td><td><span class="sev high">HIGH</span></td><td class="st-cl">CLOSED</td></tr>
+      <tr><td>MStar Global</td><td data-key="v4"></td><td><span class="sev high">HIGH</span></td><td class="st-cl">CLOSED</td></tr>
+      <tr><td>MStar Global</td><td data-key="v5"></td><td><span class="sev high">HIGH</span></td><td class="st-cl">CLOSED</td></tr>
+      <tr><td>nProtect GG</td><td data-key="v6"></td><td><span class="sev high">HIGH</span></td><td class="st-cl">CLOSED</td></tr>
+      <tr><td>MStar Global</td><td data-key="v7"></td><td><span class="sev med">MEDIUM</span></td><td class="st-cl">CLOSED</td></tr>
+      <tr><td>MStar Global</td><td data-key="v8"></td><td><span class="sev med">MEDIUM</span></td><td class="st-cl">CLOSED</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section" id="exp">
+  <div class="sec-header"><span class="sec-num">05</span><span class="sec-title" data-key="sec_career"></span><div class="sec-line"></div></div>
+  <div class="timeline">
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-year">2025 — PRESENT</div><div class="tl-role" data-key="e1_role"></div><div class="tl-org">MStar Global // VALOFE Global Limited</div><div class="tl-body" data-key="e1_body"></div></div>
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-year">2023</div><div class="tl-role" data-key="e2_role"></div><div class="tl-org" data-key="e2_org"></div><div class="tl-body" data-key="e2_body"></div></div>
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-year">2018 — PRESENT</div><div class="tl-role" data-key="e3_role"></div><div class="tl-org" data-key="e3_org"></div><div class="tl-body" data-key="e3_body"></div></div>
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-year">2018 — 2019</div><div class="tl-role" data-key="e4_role"></div><div class="tl-org">MStar Turkey // JoyGame — Istanbul</div><div class="tl-body" data-key="e4_body"></div></div>
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-year">2026</div><div class="tl-role" data-key="e5_role"></div><div class="tl-org">Nişantaşı University — Istanbul</div><div class="tl-body" data-key="e5_body"></div></div>
+  </div>
+</div>
+
+<div class="section" id="contact">
+  <div class="sec-header"><span class="sec-num">06</span><span class="sec-title" data-key="sec_contact"></span><div class="sec-line"></div></div>
+  <div class="contact-grid">
+    <div class="cc"><div class="cc-label">EMAIL</div><div class="cc-val">rootlxrd31@gmail.com</div></div>
+    <div class="cc"><div class="cc-label">DISCORD</div><div class="cc-val">rootsenpai</div></div>
+    <div class="cc"><div class="cc-label">LINKEDIN</div><div class="cc-val">umut-k-853442321</div></div>
+    <div class="cc"><div class="cc-label" data-key="ct_phone"></div><div class="cc-val">+90 533 146 60 80</div></div>
+    <div class="cc"><div class="cc-label" data-key="ct_loc"></div><div class="cc-val">Istanbul, Turkey</div></div>
+    <div class="cc"><div class="cc-label" data-key="ct_lang"></div><div class="cc-val">TR / EN / RU</div></div>
+  </div>
+</div>
+
+<footer>
+  <div class="ft">© 2026 UMUT KARAKAYA</div>
+  <div class="ft">rootsenpai // ISTANBUL</div>
+</footer>
+</div>
+
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal-box">
+    <div class="modal-head">
+      <div class="modal-head-title" id="modal-title"></div>
+      <div class="modal-close" onclick="closeModal(null,true)">[ CLOSE ]</div>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+const REPORTS={
+  m1:{
+    title:'SECURITY REPORT — MSTAR ITEM GIFT SYSTEM',
+    body:`<div class="report-line report-head">REPORT METADATA</div>
+<div class="report-line">Researcher : Umut Karakaya (rootsenpai)</div>
+<div class="report-line">Target     : MStar Global — Item Gift Endpoint</div>
+<div class="report-line">Date       : <span class="redacted" title="hover to reveal">██████████</span></div>
+<div class="report-line">Severity   : <span class="report-red">CRITICAL</span></div>
+<div class="report-line">Status     : <span style="color:var(--g)">CLOSED / PATCHED</span></div>
+<div class="report-line report-head">EXECUTIVE SUMMARY</div>
+<div class="report-line">The item gift system accepted and processed requests without performing</div>
+<div class="report-line">server-side ownership validation. An attacker with network access could</div>
+<div class="report-line">manipulate TCP packets to transfer items not owned by the sender account.</div>
+<div class="report-line report-head">TECHNICAL DETAILS</div>
+<div class="report-line">Protocol   : TCP / Ports <span class="redacted">████</span>–<span class="redacted">████</span></div>
+<div class="report-line">Tool Used  : WinDivert (userspace packet interception)</div>
+<div class="report-line">Vector     : Client-supplied item ID accepted without ownership check</div>
+<div class="report-line">Impact     : Arbitrary item transfer, in-game economy manipulation</div>
+<div class="report-line report-head">REPRODUCTION STEPS</div>
+<div class="report-line report-am">1. Intercept outbound gift packet via WinDivert hook</div>
+<div class="report-line report-am">2. Modify item_id field to target item not owned by sender</div>
+<div class="report-line report-am">3. Forward modified packet — server accepts without validation</div>
+<div class="report-line report-am">4. Target account receives item; sender inventory unchanged</div>
+<div class="report-line report-head">REMEDIATION RECOMMENDATIONS</div>
+<div class="report-line report-b">• Implement server-side ownership check before processing gift requests</div>
+<div class="report-line report-b">• Add HMAC integrity signatures to gift request payloads</div>
+<div class="report-line report-b">• Enforce rate limiting on gift endpoint (max N/hour per account)</div>
+<div class="report-line report-b">• Implement nonce/replay protection for all item transfer operations</div>`
+  },
+  m2:{
+    title:'SECURITY REPORT — MSTAR NETWORK PROTOCOL AUDIT',
+    body:`<div class="report-line report-head">REPORT METADATA</div>
+<div class="report-line">Researcher : Umut Karakaya (rootsenpai)</div>
+<div class="report-line">Target     : MStar Global — Client–Server Protocol</div>
+<div class="report-line">Date       : <span class="redacted">██████████</span></div>
+<div class="report-line">Severity   : <span class="report-red">CRITICAL</span></div>
+<div class="report-line">Status     : <span style="color:var(--g)">CLOSED / PATCHED</span></div>
+<div class="report-line report-head">FINDINGS OVERVIEW</div>
+<div class="report-line report-red">FINDING-01 — Static XOR Encryption Key</div>
+<div class="report-line">A 16-byte XOR key has remained unchanged in the client binary since</div>
+<div class="report-line">approximately 2012. Any attacker with a copy of the binary can trivially</div>
+<div class="report-line">decrypt all client–server communication.</div>
+<div class="report-line" style="margin-top:8px">Key (redacted) : <span class="redacted">████████████████████████████████</span></div>
+<div class="report-line" style="color:var(--am)">Tool: Reverse engineered via MStarDecrypt.exe analysis (IDA Pro + x32dbg)</div>
+<div class="report-line report-red" style="margin-top:10px">FINDING-02 — Plaintext UTF-16LE Transmission</div>
+<div class="report-line">Multiple packet types transmit sensitive data in plaintext UTF-16LE</div>
+<div class="report-line">encoding with no transport-layer encryption (no TLS/SSL observed).</div>
+<div class="report-line" style="color:var(--am)">Tool: Wireshark PCAP capture on loopback interface</div>
+<div class="report-line report-head">REMEDIATION RECOMMENDATIONS</div>
+<div class="report-line report-b">• Rotate XOR key immediately and implement key rotation policy</div>
+<div class="report-line report-b">• Migrate to asymmetric session key exchange (e.g. ECDH)</div>
+<div class="report-line report-b">• Enforce TLS 1.3 for all client–server communication</div>
+<div class="report-line report-b">• Obfuscate binary to prevent trivial key extraction</div>`
+  }
+};
+
+function openModal(id){
+  const r=REPORTS[id];
+  if(!r)return;
+  document.getElementById('modal-title').textContent=r.title;
+  document.getElementById('modal-body').innerHTML=r.body;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+function closeModal(e,force){
+  if(force||e.target===document.getElementById('modal-overlay'))
+    document.getElementById('modal-overlay').classList.remove('open');
+}
+
+const CMDS={
+  help:{en:`Available commands:\n  <span class="g">about</span>       — who I am\n  <span class="g">skills</span>      — technical & soft skills\n  <span class="g">projects</span>    — security research projects\n  <span class="g">contact</span>     — how to reach me\n  <span class="g">cat cv.txt</span>  — quick career summary\n  <span class="g">whoami</span>      — one-line bio\n  <span class="g">clear</span>       — clear terminal`,
+    tr:`Kullanılabilir komutlar:\n  <span class="g">about</span>       — hakkımda\n  <span class="g">skills</span>      — beceriler\n  <span class="g">projects</span>    — güvenlik araştırmaları\n  <span class="g">contact</span>     — iletişim\n  <span class="g">cat cv.txt</span>  — kariyer özeti\n  <span class="g">whoami</span>      — tek satır bio\n  <span class="g">clear</span>       — temizle`,
+    ru:`Доступные команды:\n  <span class="g">about</span>       — обо мне\n  <span class="g">skills</span>      — навыки\n  <span class="g">projects</span>    — исследования\n  <span class="g">contact</span>     — контакты\n  <span class="g">cat cv.txt</span>  — краткое резюме\n  <span class="g">whoami</span>      — одна строка\n  <span class="g">clear</span>       — очистить`},
+  whoami:{en:'Security researcher & community manager. Istanbul. 7+ years. rootsenpai.',
+    tr:'Güvenlik araştırmacısı & topluluk yöneticisi. İstanbul. 7+ yıl. rootsenpai.',
+    ru:'Исследователь безопасности и менеджер сообщества. Стамбул. 7+ лет. rootsenpai.'},
+  about:{en:'<span class="b">Umut Karakaya</span> — dual specialist in game security analysis and live-service community management.\nBased in Istanbul. Fluent in TR, EN, RU.\nCurrently: VALOFE Global Limited (MStar Global)\nDegree: B.Sc. Software Engineering — Nişantaşı University (2026)',
+    tr:'<span class="b">Umut Karakaya</span> — oyun güvenliği ve topluluk yönetiminde çift uzmanlık.\nİstanbul bazlı. TR, EN, RU akıcı.\nŞu an: VALOFE Global Limited (MStar Global)\nEğitim: Yazılım Müh. — Nişantaşı Üniversitesi (2026)',
+    ru:'<span class="b">Umut Karakaya</span> — двойная специализация в безопасности игр и управлении сообществом.\nСтамбул. TR, EN, RU свободно.\nСейчас: VALOFE Global Limited (MStar Global)\nОбразование: Бакалавр — Университет Нишанташи (2026)'},
+  skills:{en:'<span class="am">Technical:</span>  Reverse Engineering, Packet Analysis, IDA Pro, Ghidra, x64dbg\n             Wireshark, WinDivert, C++, C#, Python, Assembly x86/x64\n             nProtect GameGuard, EAC, BattlEye\n<span class="am">Community:</span> LiveOps Management, Moderation SOP Design, Crisis Response\n             Discord Architecture, Localization (TR/EN/RU), Jira, Zendesk',
+    tr:'<span class="am">Teknik:</span>    Tersine Mühendislik, Paket Analizi, IDA Pro, Ghidra, x64dbg\n             Wireshark, WinDivert, C++, C#, Python, Assembly x86/x64\n<span class="am">Topluluk:</span>  LiveOps Yönetimi, Moderasyon SOP Tasarımı, Kriz Yönetimi\n             Discord Mimarisi, Yerelleştirme (TR/EN/RU), Jira, Zendesk',
+    ru:'<span class="am">Техн.:</span>     Обратная разработка, Анализ пакетов, IDA Pro, Ghidra, x64dbg\n             Wireshark, WinDivert, C++, C#, Python, Assembly x86/x64\n<span class="am">Сообщество:</span> LiveOps, Регламенты модерации, Антикризисное управление\n             Discord-архитектура, Локализация (TR/EN/RU), Jira, Zendesk'},
+  projects:{en:'<span class="r">[CLOSED]</span> MStar — Item Gift System (CRITICAL)\n<span class="r">[CLOSED]</span> MStar — Static XOR Key + Plaintext Protocol (CRITICAL)\n<span class="r">[CLOSED]</span> MStar — Network Vulnerabilities x3 (HIGH)\n<span class="am">[RE]</span>     R6 Siege — OLLVM Obfuscated Binary Analysis\n<span class="am">[RE]</span>     nProtect GameGuard — Driver-level Analysis\n<span class="b">[RES]</span>    Dead by Daylight — EAC/BattlEye Integrity Research',
+    tr:'<span class="r">[KAPALI]</span> MStar — Eşya Hediye Sistemi (KRİTİK)\n<span class="r">[KAPALI]</span> MStar — Statik XOR Anahtarı + Açık Metin Protokol (KRİTİK)\n<span class="r">[KAPALI]</span> MStar — Ağ Açıkları x3 (YÜKSEK)\n<span class="am">[RE]</span>      R6 Siege — OLLVM Gizlenmiş İkili Analizi\n<span class="am">[RE]</span>      nProtect GameGuard — Sürücü Seviyesi Analizi\n<span class="b">[ARAŞ]</span>   Dead by Daylight — EAC/BattlEye Araştırması',
+    ru:'<span class="r">[ЗАКРЫТО]</span> MStar — Система подарков (КРИТИЧЕСКИЙ)\n<span class="r">[ЗАКРЫТО]</span> MStar — Статичный XOR + открытый протокол (КРИТИЧЕСКИЙ)\n<span class="r">[ЗАКРЫТО]</span> MStar — Сетевые уязвимости x3 (ВЫСОКИЙ)\n<span class="am">[RE]</span>       R6 Siege — Анализ OLLVM бинарников\n<span class="am">[RE]</span>       nProtect GameGuard — Уровень драйвера\n<span class="b">[ИСС]</span>     Dead by Daylight — EAC/BattlEye'},
+  contact:{en:'Email   : rootlxrd31@gmail.com\nDiscord : rootsenpai\nPhone   : +90 533 146 60 80\nLinkedIn: linkedin.com/in/umut-k-853442321\nLocation: Istanbul, Turkey',
+    tr:'E-posta : rootlxrd31@gmail.com\nDiscord : rootsenpai\nTelefon : +90 533 146 60 80\nLinkedIn: linkedin.com/in/umut-k-853442321\nKonum   : İstanbul, Türkiye',
+    ru:'Почта   : rootlxrd31@gmail.com\nDiscord : rootsenpai\nТелефон : +90 533 146 60 80\nLinkedIn: linkedin.com/in/umut-k-853442321\nГород   : Стамбул, Турция'},
+  'cat cv.txt':{en:'> Umut Karakaya — Security Researcher & Community Manager\n> 7+ years in live-service gaming industry\n> Responsible disclosure: 8 vulnerabilities, all CLOSED\n> Communities managed: 100K+ members, TR/MENA/CIS regions\n> Tickets resolved: 5000+ | SLA: <2 hours avg\n> Languages: Turkish (native), English (fluent), Russian (fluent)\n> Stack: C++, C#, Python, IDA Pro, Ghidra, Wireshark, WinDivert',
+    tr:'> Umut Karakaya — Güvenlik Araştırmacısı & Topluluk Yöneticisi\n> Oyun sektöründe 7+ yıl\n> Sorumlu ifşa: 8 güvenlik açığı, tümü KAPALI\n> Yönetilen topluluklar: 100K+ üye\n> Çözülen biletler: 5000+ | SLA: ort. <2 saat\n> Diller: Türkçe (anadil), İngilizce (akıcı), Rusça (akıcı)',
+    ru:'> Умут Каракая — Исследователь безопасности и менеджер сообщества\n> 7+ лет в индустрии live-service игр\n> Ответственное раскрытие: 8 уязвимостей, все ЗАКРЫТЫ\n> Сообщества: 100K+ участников, TR/MENA/CIS\n> Обработано тикетов: 5000+ | SLA: <2 часа\n> Языки: турецкий (родной), английский (свободно), русский (свободно)'}
+};
+
+let curLang='en';
+const out=document.getElementById('term-output');
+
+function termPrint(html,cls=''){
+  const d=document.createElement('div');
+  d.className='term-line '+(cls||'');
+  d.innerHTML=html;
+  out.appendChild(d);
+  out.scrollTop=out.scrollHeight;
+}
+
+document.getElementById('term-input').addEventListener('keydown',function(e){
+  if(e.key!=='Enter')return;
+  const val=this.value.trim().toLowerCase();
+  if(!val)return;
+  termPrint('$ '+val,'cmd');
+  this.value='';
+  if(val==='clear'){out.innerHTML='';return;}
+  const resp=CMDS[val];
+  if(resp){
+    const txt=resp[curLang]||resp['en'];
+    txt.split('\n').forEach(l=>termPrint(l));
+  } else {
+    termPrint('command not found: '+val+' — type <span style="color:var(--bright)">help</span> for available commands','r');
+  }
+});
+
+const T={
+en:{nav_term:'TERMINAL',nav_about:'ABOUT',nav_research:'RESEARCH',nav_exp:'CAREER',nav_contact:'CONTACT',hero_tag:'// SECURITY RESEARCHER · COMMUNITY MANAGER · SOFTWARE ENGINEER',hero_sub:'Game security analyst and live-ops specialist with 7+ years in the industry.\nIstanbul, Turkey — rootsenpai',cta_hire:'HIRE ME',st_status_l:'STATUS',st_status_v:'OPEN TO WORK',st_base_l:'BASE',st_exp_l:'EXPERIENCE',st_exp_v:'7+ YEARS',st_lang_l:'LANGUAGES',m1:'ACTIVE MEMBERS MANAGED',m2:'TICKETS RESOLVED',m3:'SLA RESPONSE TIME',m4:'VULNERABILITIES CLOSED',m5:'SUPPORTED REGIONS',m6:'YEARS EXPERIENCE',sec_term:'INTERACTIVE TERMINAL',sec_about:'WHO AM I',mode_cm:'COMMUNITY MANAGEMENT',mode_sec:'SECURITY RESEARCH',cm1_tag:'// WHAT I DO',cm1_title:'LiveOps & Community Architecture',cm1_body:'I build and manage gaming communities at scale. Governance frameworks, moderation SOPs, escalation pipelines — 100K+ active members across TR, EN, and RU markets.',cm2_tag:'// WHY HIRE ME',cm2_title:'The Technical CM Advantage',cm2_body:'Unlike most community managers, I understand the technical layer. I can read network traffic, verify bug reports, and write engineering-ready escalations. Zero translation loss between community and dev.',cm3_tag:'// TRACK RECORD',cm3_title:'Proven at Scale',cm3_body:'7+ years across JoyGame, VALOFE, and independent projects. Full patch cycle localization in Turkish and Russian. High-volume incident pipelines under strict SLAs.',cm4_tag:'// RELIABILITY',cm4_title:'Calm Under Pressure',cm4_body:'Community crises don\'t rattle me. I de-escalate, document, and resolve — then build systems to prevent recurrence.',s1_tag:'// WHAT I DO',s1_title:'Game Security Analysis',s1_body:'I identify and responsibly disclose vulnerabilities in live-service games. Clear documentation, reproduction steps, and coordinated resolution with dev teams.',s2_tag:'// WHY HIRE ME',s2_title:'Context-Aware Researcher',s2_body:'I\'ve been inside these games as a GM and player. I understand real-world economic and social impact. Reports include reproduction steps, severity assessments, and remediation paths.',s3_tag:'// TOOLCHAIN',s3_title:'Full Analysis Toolkit',s3_body:'C++ / C# / Python for tooling. IDA Pro and Ghidra for static. x64dbg for dynamic. Wireshark and WinDivert for network layer.',s4_tag:'// ANTI-CHEAT',s4_title:'Anti-Cheat Specialist',s4_body:'Deep research into nProtect GameGuard, EAC, and BattlEye — studying these systems from both sides to help teams build stronger defenses.',sec_skills:'CORE SKILLS',sk1:'Reverse Engineering',sk2:'Packet Analysis',sk3:'Anti-Cheat Research',sk4:'LiveOps Management',sk5:'Moderation SOPs',sk6:'TR / EN / RU',sec_research:'SECURITY RESEARCH',p1_title:'MSTAR — ITEM GIFT SYSTEM',p1_body:'Identified missing server-side validation in the item gift system. Analyzed traffic, documented the vulnerability, and delivered a full report with remediation recommendations.',p2_title:'MSTAR — NETWORK PROTOCOL AUDIT',p2_body:'Discovered plaintext packet transmission and a static encryption key unchanged since 2012. Reverse engineered the decrypt binary and built Python tooling to validate findings.',p3_title:'MSTAR — NETWORK LAYER VULNERABILITIES',p3_body:'Identified and documented multiple network-layer issues including player identity spoofing and flooding vectors. Reported with reproduction steps and severity assessments.',p4_title:'R6 SIEGE — OBFUSCATED BINARY ANALYSIS',p4_body:'Located and analyzed a validation function across per-account OLLVM-obfuscated builds using IDA Pro and Zydis. Implemented multi-pattern fallback strategy.',p5_title:'NPROTECT GAMEGUARD — ANALYSIS',p5_body:'Researched driver-level behavior, memory scanning hooks, and client-side file structures to evaluate defense robustness.',p6_title:'DEAD BY DAYLIGHT — INTEGRITY RESEARCH',p6_body:'EAC/BattlEye behavior evaluation and Wireshark-based traffic mapping to document exploitation risks.',sec_vulns:'VULNERABILITY LOG',vt_target:'TARGET',vt_finding:'FINDING',vt_sev:'SEVERITY',vt_status:'STATUS',v1:'Item gift — missing server-side validation',v2:'Static encryption key + plaintext protocol',v3:'Player identity spoofing',v4:'TCP SYN flooding vector',v5:'Interaction flooding via Abnormality function',v6:'Driver-level analysis findings',v7:'.tbl file client-side manipulation',v8:'Timing window sync exploitation',sec_career:'CAREER',e1_role:'Translator · Game Master · Moderator · Security Researcher',e1_body:'Multi-role contractor. TR/RU localization, live operations, community governance, and security research with direct reporting to the dev team.',e2_role:'Multiplayer Integrity Researcher',e2_org:'Independent — Dead by Daylight Ecosystem',e2_body:'EAC/BattlEye research, PCAP traffic analysis, exploitation risk mapping.',e3_role:'Senior Community Manager & Security Researcher',e3_org:'Various — Freelance',e3_body:'Scaled gaming communities to 100K+ members. Security analysis, anti-cheat research, community governance across multiple titles.',e4_role:'Game Master — Live Operations',e4_body:'Player support, incident management, live event coordination for Turkish MStar server.',e5_role:'B.Sc. Software Engineering',e5_body:'Network Security, Software Architecture, Operating Systems, Algorithms.',sec_contact:'CONTACT',ct_phone:'PHONE',ct_loc:'LOCATION',ct_lang:'LANGUAGES'},
+tr:{nav_term:'TERMİNAL',nav_about:'HAKKIMDA',nav_research:'ARAŞTIRMA',nav_exp:'KARİYER',nav_contact:'İLETİŞİM',hero_tag:'// GÜVENLİK ARAŞTIRMACISI · TOPLULUK YÖNETİCİSİ · YAZILIM MÜHENDİSİ',hero_sub:'7+ yıllık sektör deneyimiyle oyun güvenliği analisti ve live-ops uzmanı.\nİstanbul, Türkiye — rootsenpai',cta_hire:'İŞE AL',st_status_l:'DURUM',st_status_v:'İŞ ARIYOR',st_base_l:'KONUM',st_exp_l:'DENEYİM',st_exp_v:'7+ YIL',st_lang_l:'DİLLER',m1:'YÖNETİLEN AKTİF ÜYE',m2:'ÇÖZÜLEN BİLET',m3:'SLA YANIT SÜRESİ',m4:'KAPALI GÜVENLİK AÇIĞI',m5:'DESTEKLENEN BÖLGELER',m6:'YIL DENEYİM',sec_term:'ETKİLEŞİMLİ TERMİNAL',sec_about:'BEN KİMİM',mode_cm:'TOPLULUK YÖNETİMİ',mode_sec:'GÜVENLİK ARAŞTIRMASI',cm1_tag:'// NE YAPIYORUM',cm1_title:'LiveOps & Topluluk Mimarisi',cm1_body:'Oyun topluluklarını sıfırdan kuruyorum. Yönetim çerçeveleri, moderasyon SOP\'ları, eskalasyon hatları — TR, EN ve RU pazarlarında 100K+ aktif üye.',cm2_tag:'// NEDEN BENİ SEÇMELİSİNİZ',cm2_title:'Teknik CM Avantajı',cm2_body:'Çoğu CM\'in aksine oyunların teknik katmanını anlıyorum. Ağ trafiğini okur, hata raporlarını doğrular ve mühendislik ekibine hazır eskalasyonlar yazarım.',cm3_tag:'// BAŞARI GEÇMİŞİ',cm3_title:'Kanıtlanmış Ölçek',cm3_body:'JoyGame, VALOFE ve bağımsız projelerde 7+ yıl. Türkçe/Rusça tam yama döngüsü lokalizasyonu. Sıkı SLA\'lar altında yüksek hacimli olay yönetimi.',cm4_tag:'// GÜVENİLİRLİK',cm4_title:'Baskı Altında Sakin',cm4_body:'Topluluk krizleri beni sarsmaz. Durumu sakinleştiriyor, belgeli ve çözüyorum — sonra tekrarını önleyecek sistemi kuruyorum.',s1_tag:'// NE YAPIYORUM',s1_title:'Oyun Güvenliği Analizi',s1_body:'Live-service oyunlarda güvenlik açıklarını tespit edip sorumlu biçimde ifşa ediyorum. Bulgularımı net belgeliyor, geliştirici ekiplerle çözüme kavuşturuyorum.',s2_tag:'// NEDEN BENİ SEÇMELİSİNİZ',s2_title:'Bağlam Farkındalıklı Araştırmacı',s2_body:'Bu oyunları hem GM hem oyuncu olarak içeriden tanıyorum. Her bulgunun ekonomik ve sosyal etkisini anlıyorum. Raporlarım üretme adımları ve düzeltme önerileri içerir.',s3_tag:'// ARAÇLAR',s3_title:'Tam Analiz Araç Seti',s3_body:'C++/C#/Python araç geliştirme. IDA Pro/Ghidra statik analiz. x64dbg dinamik. Wireshark/WinDivert ağ katmanı.',s4_tag:'// ANTİ-CHEAT',s4_title:'Anti-Cheat Uzmanı',s4_body:'nProtect GG, EAC ve BattlEye üzerine derinlemesine araştırma. Her iki taraftan inceleyerek daha güçlü savunmalar oluşturmaya katkı sağlıyorum.',sec_skills:'TEMEL BECERİLER',sk1:'Tersine Mühendislik',sk2:'Paket Analizi',sk3:'Anti-Cheat Araştırması',sk4:'LiveOps Yönetimi',sk5:'Moderasyon SOP\'ları',sk6:'TR / EN / RU',sec_research:'GÜVENLİK ARAŞTIRMASI',p1_title:'MSTAR — EŞYA HEDİYE SİSTEMİ',p1_body:'Eşya hediye sisteminde sunucu tarafı doğrulaması eksikliğini tespit ettim. Trafik analizi yapıp belgeledim, düzeltme önerileriyle birlikte tam rapor sundum.',p2_title:'MSTAR — AĞ PROTOKOLÜ DENETİMİ',p2_body:'Açık metin iletimi ve 2012\'den değiştirilmemiş statik şifreleme anahtarı keşfettim. Tersine mühendislik ve Python araçlarıyla doğruladım. VALOFE iş teklifine yol açtı.',p3_title:'MSTAR — AĞ KATMANI AÇIKLARI',p3_body:'Kimlik sahteciliği ve flooding vektörleri dahil birden fazla ağ açığı tespit edip belgeledim. Üretme adımları ve önem değerlendirmeleriyle raporladım.',p4_title:'R6 SIEGE — GİZLENMİŞ İKİLİ ANALİZİ',p4_body:'IDA Pro ve Zydis ile OLLVM gizlenmiş derlemelerde doğrulama fonksiyonunu tespit ettim. Çoklu örüntü yedek stratejisi uyguladım.',p5_title:'NPROTECT GAMEGUARD — ANALİZ',p5_body:'Sürücü davranışı, bellek tarama kancaları ve istemci dosya yapılarını inceleyerek savunma sağlamlığını değerlendirdim.',p6_title:'DEAD BY DAYLIGHT — BÜTÜNLÜK ARAŞTIRMASI',p6_body:'EAC/BattlEye davranış analizi ve Wireshark ile trafik haritalama yaparak istismar risklerini belgeledim.',sec_vulns:'AÇIK KAYIT',vt_target:'HEDEF',vt_finding:'BULGU',vt_sev:'ÖNEM',vt_status:'DURUM',v1:'Eşya hediye — sunucu doğrulaması eksikliği',v2:'Statik şifreleme + açık metin protokol',v3:'Oyuncu kimliği sahteciliği',v4:'TCP SYN flooding vektörü',v5:'Abnormality fonksiyonu flooding',v6:'Sürücü düzeyinde bulgular',v7:'.tbl dosyası istemci manipülasyonu',v8:'Zamanlama penceresi açığı',sec_career:'KARİYER',e1_role:'Çevirmen · Oyun Ustası · Moderatör · Güvenlik Araştırmacısı',e1_body:'Çok rollü sözleşme. TR/RU lokalizasyon, live ops, topluluk yönetimi ve geliştirme ekibine direkt bağlı güvenlik araştırması.',e2_role:'Çok Oyunculu Bütünlük Araştırmacısı',e2_org:'Bağımsız — Dead by Daylight',e2_body:'EAC/BattlEye araştırması, PCAP trafik analizi, istismar riski haritalama.',e3_role:'Kıdemli Topluluk Yöneticisi & Güvenlik Araştırmacısı',e3_org:'Çeşitli — Freelance',e3_body:'100K+ üyeye ölçeklendirilmiş topluluklar. Birden fazla oyunda güvenlik analizi ve topluluk yönetimi.',e4_role:'Oyun Ustası — Live Operasyonlar',e4_body:'Türk MStar sunucusu için oyuncu desteği, olay yönetimi ve etkinlik koordinasyonu.',e5_role:'Lisans — Yazılım Mühendisliği',e5_body:'Ağ Güvenliği, Yazılım Mimarisi, İşletim Sistemleri, Algoritmalar.',sec_contact:'İLETİŞİM',ct_phone:'TELEFON',ct_loc:'KONUM',ct_lang:'DİLLER'},
+ru:{nav_term:'ТЕРМИНАЛ',nav_about:'ОБО МНЕ',nav_research:'ИССЛЕДОВАНИЯ',nav_exp:'КАРЬЕРА',nav_contact:'КОНТАКТЫ',hero_tag:'// ИССЛЕДОВАТЕЛЬ БЕЗОПАСНОСТИ · МЕНЕДЖЕР СООБЩЕСТВА · ИНЖЕНЕР',hero_sub:'Аналитик игровой безопасности и специалист live-ops, 7+ лет опыта.\nСтамбул, Турция — rootsenpai',cta_hire:'НАНЯТЬ',st_status_l:'СТАТУС',st_status_v:'ОТКРЫТ К РАБОТЕ',st_base_l:'ГОРОД',st_exp_l:'ОПЫТ',st_exp_v:'7+ ЛЕТ',st_lang_l:'ЯЗЫКИ',m1:'АКТИВНЫХ УЧАСТНИКОВ',m2:'ЗАКРЫТЫХ ТИКЕТОВ',m3:'ВРЕМЯ ОТВЕТА SLA',m4:'ЗАКРЫТЫХ УЯЗВИМОСТЕЙ',m5:'ПОДДЕРЖИВАЕМЫЕ РЕГИОНЫ',m6:'ЛЕТ ОПЫТА',sec_term:'ИНТЕРАКТИВНЫЙ ТЕРМИНАЛ',sec_about:'КТО Я',mode_cm:'УПРАВЛЕНИЕ СООБЩЕСТВОМ',mode_sec:'ИССЛЕДОВАНИЕ БЕЗОПАСНОСТИ',cm1_tag:'// ЧТО Я ДЕЛАЮ',cm1_title:'LiveOps и Архитектура Сообщества',cm1_body:'Строю игровые сообщества с нуля. Системы управления, регламенты модерации, протоколы эскалации — 100K+ участников на рынках TR, EN, RU.',cm2_tag:'// ПОЧЕМУ Я',cm2_title:'Технический Плюс Менеджера',cm2_body:'В отличие от большинства CM я понимаю технический слой игр. Читаю трафик, верифицирую баг-репорты, пишу эскалации для инженерной команды.',cm3_tag:'// ДОСТИЖЕНИЯ',cm3_title:'Проверено в Масштабе',cm3_body:'7+ лет в JoyGame, VALOFE и независимых проектах. Локализация патч-циклов на турецкий и русский. Высокий поток инцидентов в строгих SLA.',cm4_tag:'// НАДЁЖНОСТЬ',cm4_title:'Спокойствие под Давлением',cm4_body:'Кризисы сообщества меня не пугают. Деэскалирую, документирую, решаю — затем выстраиваю системы для предотвращения повторения.',s1_tag:'// ЧТО Я ДЕЛАЮ',s1_title:'Анализ Безопасности Игр',s1_body:'Нахожу и ответственно раскрываю уязвимости в live-service играх. Чёткая документация, шаги воспроизведения, координированное устранение с командой.',s2_tag:'// ПОЧЕМУ Я',s2_title:'Исследователь с Контекстом',s2_body:'Знаю эти игры изнутри — как GM и как игрок. Понимаю реальный экономический и социальный эффект каждой находки.',s3_tag:'// ИНСТРУМЕНТЫ',s3_title:'Полный Арсенал',s3_body:'C++/C#/Python для инструментов. IDA Pro/Ghidra статика. x64dbg динамика. Wireshark/WinDivert сетевой уровень.',s4_tag:'// АНТИЧИТ',s4_title:'Специалист по Античит',s4_body:'Глубокое исследование nProtect GG, EAC и BattlEye с обеих сторон для построения более надёжной защиты.',sec_skills:'КЛЮЧЕВЫЕ НАВЫКИ',sk1:'Обратная Разработка',sk2:'Анализ Пакетов',sk3:'Исследование Античит',sk4:'Управление LiveOps',sk5:'Регламенты Модерации',sk6:'TR / EN / RU',sec_research:'ИССЛЕДОВАНИЯ БЕЗОПАСНОСТИ',p1_title:'MSTAR — СИСТЕМА ПОДАРКОВ',p1_body:'Обнаружил отсутствие серверной валидации в системе подарков. Проанализировал трафик, задокументировал, передал полный отчёт с рекомендациями.',p2_title:'MSTAR — АУДИТ ПРОТОКОЛА',p2_body:'Обнаружил открытую передачу данных и статичный ключ шифрования с 2012 года. Обратная разработка + Python-инструменты. Привело к контракту с VALOFE.',p3_title:'MSTAR — СЕТЕВЫЕ УЯЗВИМОСТИ',p3_body:'Идентифицировал несколько сетевых уязвимостей включая подделку ID игрока и flooding-векторы. Отчёт с шагами воспроизведения.',p4_title:'R6 SIEGE — АНАЛИЗ ОБФУСКАЦИИ',p4_body:'IDA Pro + Zydis: нашёл и проанализировал функцию валидации в OLLVM-сборках. Многошаблонный fallback для обфускационной вариации.',p5_title:'NPROTECT GAMEGUARD — АНАЛИЗ',p5_body:'Исследование поведения драйвера, хуков памяти и клиентских файловых структур.',p6_title:'DEAD BY DAYLIGHT — ИССЛЕДОВАНИЕ',p6_body:'Оценка EAC/BattlEye и картирование трафика через Wireshark для документации рисков.',sec_vulns:'ЖУРНАЛ УЯЗВИМОСТЕЙ',vt_target:'ЦЕЛЬ',vt_finding:'НАХОДКА',vt_sev:'КРИТИЧНОСТЬ',vt_status:'СТАТУС',v1:'Система подарков — нет серверной валидации',v2:'Статичный ключ + открытый протокол',v3:'Подделка ID игрока',v4:'TCP SYN флуд',v5:'Флуд через Abnormality',v6:'Находки анализа драйвера',v7:'.tbl клиентская манипуляция',v8:'Эксплуатация окна синхронизации',sec_career:'КАРЬЕРА',e1_role:'Переводчик · GM · Модератор · Исследователь безопасности',e1_body:'Многоролевой контракт. Локализация TR/RU, live-ops, управление сообществом, исследования безопасности.',e2_role:'Исследователь Целостности',e2_org:'Независимо — Dead by Daylight',e2_body:'EAC/BattlEye исследование, PCAP-анализ, картирование рисков.',e3_role:'Старший CM & Исследователь Безопасности',e3_org:'Различные проекты — Фриланс',e3_body:'100K+ участников. Анализ безопасности, исследование античит, управление сообществами.',e4_role:'Гейм-мастер — Live Операции',e4_body:'Поддержка игроков, инциденты, ивенты для турецкого сервера MStar.',e5_role:'Бакалавр — Программная Инженерия',e5_body:'Сетевая безопасность, Архитектура ПО, Операционные системы, Алгоритмы.',sec_contact:'КОНТАКТЫ',ct_phone:'ТЕЛЕФОН',ct_loc:'ГОРОД',ct_lang:'ЯЗЫКИ'}
+};
+
+function setLang(l){
+  curLang=l;
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.textContent===l.toUpperCase()));
+  document.querySelectorAll('[data-key]').forEach(el=>{
+    const v=T[l][el.dataset.key];
+    if(v!==undefined)el.textContent=v;
+  });
+}
+function switchMode(m){
+  document.querySelectorAll('.mode-btn').forEach((b,i)=>b.classList.toggle('active',i===(m==='cm'?0:1)));
+  document.getElementById('view-cm').classList.toggle('active',m==='cm');
+  document.getElementById('view-sec').classList.toggle('active',m==='sec');
+}
+
+setLang('en');
+
+const cv=document.getElementById('bg');
+const cx=cv.getContext('2d');
+cv.width=window.innerWidth;cv.height=window.innerHeight;
+const cols=Math.floor(cv.width/20);
+const rws=Array.from({length:cols},()=>Math.random()*cv.height);
+function draw(){cx.fillStyle='rgba(8,13,8,0.05)';cx.fillRect(0,0,cv.width,cv.height);cx.fillStyle='#00cc55';cx.font='13px Share Tech Mono';rws.forEach((y,i)=>{cx.fillText(String.fromCharCode(0x30A0+Math.random()*96),i*20,y);rws[i]=y>cv.height+20?0:y+20});}
+setInterval(draw,55);
+window.addEventListener('resize',()=>{cv.width=window.innerWidth;cv.height=window.innerHeight});
+</script>
