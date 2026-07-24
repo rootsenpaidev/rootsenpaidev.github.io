@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WTTG III Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="ambient" aria-hidden="true"></div>
+  <div class="grid-bg" aria-hidden="true"></div>
+
+  <div class="app">
+    <header class="header">
+      <div class="header-left">
+        <div class="logo-mark">
+          <span class="logo-pulse"></span>
+          <span class="logo-core">III</span>
+        </div>
+        <div>
+          <p class="eyebrow">Welcome to the Game</p>
+          <h1 id="t-title">Guide</h1>
+          <p id="t-subtitle" class="subtitle"></p>
+        </div>
+      </div>
+      <div class="lang-switch" role="group" aria-label="Language">
+        <button type="button" class="lang-btn" data-lang="en">EN</button>
+        <button type="button" class="lang-btn" data-lang="tr">TR</button>
+      </div>
+    </header>
+
+    <nav class="nav-pills" id="tabs">
+      <button type="button" class="pill-tab active" data-tab="time">
+        <span class="tab-icon">◷</span>
+        <span id="t-tabTime"></span>
+      </button>
+      <button type="button" class="pill-tab" data-tab="sites">
+        <span class="tab-icon">◎</span>
+        <span id="t-tabSites"></span>
+      </button>
+      <button type="button" class="pill-tab" data-tab="miners">
+        <span class="tab-icon">▣</span>
+        <span id="t-tabMiners"></span>
+      </button>
+      <button type="button" class="pill-tab" data-tab="keys">
+        <span class="tab-icon">⛨</span>
+        <span id="t-tabKeys"></span>
+      </button>
+    </nav>
+
+    <main class="content">
+      <!-- Time -->
+      <section id="panel-time" class="panel active">
+        <div class="terminal-card glow-red">
+          <div class="card-head">
+            <span class="dot red"></span><span class="dot amber"></span><span class="dot green"></span>
+            <span class="card-title" id="t-timeLabel"></span>
+          </div>
+          <div class="card-body">
+            <p class="hint" id="t-timeHint"></p>
+            <div class="clock-widget">
+              <div class="clock-face">
+                <span class="clock-colon">:</span>
+                <input type="text" id="minute-input" inputmode="numeric" maxlength="2" autocomplete="off" spellcheck="false">
+                <span class="clock-suffix">min</span>
+              </div>
+              <button type="button" class="btn-primary" id="time-btn">
+                <span class="btn-shine"></span>
+              </button>
+            </div>
+            <p class="error" id="time-error" hidden></p>
+          </div>
+        </div>
+
+        <div class="results-card">
+          <div class="results-head">
+            <h2 id="t-timedOpen"></h2>
+            <span class="count-badge" id="time-count">—</span>
+          </div>
+          <div id="time-result" class="chip-grid"></div>
+          <p class="footnote" id="t-alwaysNote"></p>
+        </div>
+      </section>
+
+      <!-- Sites -->
+      <section id="panel-sites" class="panel">
+        <div class="search-bar">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3-3"/></svg>
+          <input type="search" id="search" autocomplete="off">
+        </div>
+        <div class="filter-pills" id="filter-pills"></div>
+        <div id="site-lists" class="site-sections"></div>
+      </section>
+
+      <!-- Miners -->
+      <section id="panel-miners" class="panel">
+        <div id="miner-lists" class="miner-deck"></div>
+      </section>
+
+      <!-- Keys -->
+      <section id="panel-keys" class="panel">
+        <div class="info-stack">
+          <div class="info-card blue">
+            <div class="info-icon">ℹ</div>
+            <p id="t-keysRule"></p>
+          </div>
+          <div class="info-card amber">
+            <div class="info-icon">⚠</div>
+            <p id="t-keysWarn"></p>
+          </div>
+        </div>
+
+        <div class="keys-table-wrap">
+          <h2 id="t-keysExamples"></h2>
+          <ul id="key-list" class="keys-table"></ul>
+        </div>
+
+        <div class="tip-card">
+          <p id="t-logjukTip"></p>
+          <a href="https://wttgiii.peterrock.dev/vm-network/" target="_blank" rel="noopener" class="ext-btn">
+            wttgiii.peterrock.dev ↗
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p id="t-footer"></p>
+    </footer>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="i18n.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
