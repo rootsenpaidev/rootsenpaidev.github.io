@@ -40,7 +40,7 @@ const I18N = {
     keysExamples: "Example keys",
     keyLabel: "Key",
     logjukTip: "LogJuk has low mining speed but stays mounted permanently without issues.",
-    footer: "Fan guide · Data from TwisTonFire & community",
+    footer: "Fan guide · Data from WTTG Wiki & community",
     invalidMinute: "Enter a number between 0 and 59."
   },
   tr: {
@@ -84,7 +84,7 @@ const I18N = {
     keysExamples: "Örnek anahtarlar",
     keyLabel: "Anahtar",
     logjukTip: "LogJuk düşük madencilik hızına sahip ama kalıcı mount için idealdir, sorun çıkarmaz.",
-    footer: "Fan rehberi · TwisTonFire & topluluk verisi",
+    footer: "Fan rehberi · WTTG Wiki & topluluk verisi",
     invalidMinute: "0 ile 59 arasında bir sayı gir."
   }
 };

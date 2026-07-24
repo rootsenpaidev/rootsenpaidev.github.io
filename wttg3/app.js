@@ -156,17 +156,38 @@
     }
   }
 
+  function siteChip(name, careful) {
+    const tag = careful ? `<span class="tag-careful">${t("badgeCareful")}</span>` : "";
+    return `<li class="site-row" data-name="${name.toLowerCase()}"><span class="name">${name}${tag}</span></li>`;
+  }
+
+  function renderTimedBlock() {
+    const groups = Object.entries(WEBSITES.timed).map(([winKey, names]) => {
+      const tw = TIME_WINDOWS[winKey];
+      const rows = names.map(n => siteChip(n, CAREFUL_SITES.includes(n))).join("");
+      return `<div class="window-group">
+        <div class="window-head"><span class="window-dot" style="background:${tw.color}"></span>${tw.label}</div>
+        <ul class="site-rows" style="--wcolor:${tw.color}">${rows}</ul>
+      </div>`;
+    }).join("");
+
+    const total = Object.values(WEBSITES.timed).flat().length;
+    return `<div class="cat-block" data-cat="timed">
+      <div class="cat-head">
+        <span class="cat-dot timed"></span>
+        <h3>${t("catTimed")}</h3>
+        <span class="cat-count">${total}</span>
+      </div>
+      <div class="window-groups">${groups}</div>
+    </div>`;
+  }
+
   function renderSites() {
     $("site-lists").innerHTML = CAT_ORDER.map(cat => {
+      if (cat.key === "timed") return renderTimedBlock();
+
       const sites = ALL_SITES.filter(s => s.category === cat.key);
-      const rows = sites.map(s => {
-        const meta = getSiteWindowLabel(s.name, lang);
-        const careful = s.careful ? `<span class="tag-careful">${t("badgeCareful")}</span>` : "";
-        return `<li class="site-row" data-name="${s.name.toLowerCase()}">
-          <span class="name">${s.name}${careful}</span>
-          <span class="meta">${meta}</span>
-        </li>`;
-      }).join("");
+      const rows = sites.map(s => siteChip(s.name, s.careful)).join("");
 
       return `<div class="cat-block" data-cat="${cat.key}">
         <div class="cat-head">
@@ -188,6 +209,10 @@
       block.querySelectorAll(".site-row").forEach(row => {
         row.classList.toggle("hidden", !!(q && !row.dataset.name.includes(q)));
       });
+    });
+    document.querySelectorAll(".window-group").forEach(g => {
+      const anyVisible = [...g.querySelectorAll(".site-row")].some(r => !r.classList.contains("hidden"));
+      g.style.display = anyVisible ? "" : "none";
     });
   }
 
