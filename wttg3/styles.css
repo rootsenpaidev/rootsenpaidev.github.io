@@ -874,6 +874,117 @@ body {
   border-color: rgba(77,159,255,.3);
 }
 
+/* Guide */
+.guide-card-title {
+  font-size: .85rem;
+  font-weight: 700;
+  letter-spacing: -.01em;
+  margin-bottom: .35rem;
+  color: var(--text);
+}
+
+.prep-list { list-style: none; }
+
+.prep-item {
+  display: flex;
+  align-items: flex-start;
+  gap: .7rem;
+  padding: .7rem 1.1rem;
+  border-bottom: 1px solid rgba(255,255,255,.03);
+  font-size: .82rem;
+  color: var(--dim);
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.prep-item:last-child { border-bottom: none; }
+
+.prep-check {
+  flex-shrink: 0;
+  width: 1.15rem; height: 1.15rem;
+  display: grid; place-items: center;
+  border-radius: 50%;
+  background: var(--green-dim);
+  color: var(--green);
+  font-size: .68rem;
+  font-weight: 700;
+  margin-top: .1rem;
+}
+
+.threat-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .threat-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (min-width: 1000px) {
+  .threat-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+.threat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: 2px solid var(--tcolor, var(--red));
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: transform .2s, box-shadow .2s;
+}
+
+.threat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.threat-head {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  padding: .85rem 1.1rem;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+}
+
+.threat-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--tcolor, var(--red));
+  box-shadow: 0 0 8px var(--tcolor, var(--red));
+  flex-shrink: 0;
+}
+
+.threat-head h3 {
+  font-size: .9rem;
+  font-weight: 800;
+  letter-spacing: -.01em;
+}
+
+.threat-body { padding: .95rem 1.1rem 1.1rem; }
+
+.threat-label {
+  font-family: var(--mono);
+  font-size: .62rem;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: .7rem;
+}
+
+.threat-label:first-child { margin-top: 0; }
+
+.threat-trigger, .threat-counter {
+  font-size: .8rem;
+  color: var(--dim);
+  font-weight: 500;
+  line-height: 1.5;
+  margin-top: .25rem;
+}
+
+.threat-counter { color: var(--text); }
+
 /* Footer */
 .footer {
   text-align: center;

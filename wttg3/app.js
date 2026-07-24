@@ -76,19 +76,24 @@
     renderSites();
     renderMiners();
     renderKeys();
+    renderGuide();
     checkTime();
   }
 
   function applyStaticText() {
     const map = {
       "t-title": "title", "t-subtitle": "subtitle",
-      "t-tabTime": "tabTime", "t-tabSites": "tabSites",
+      "t-tabGuide": "tabGuide", "t-tabTime": "tabTime", "t-tabSites": "tabSites",
       "t-tabMiners": "tabMiners", "t-tabKeys": "tabKeys",
       "t-timeLabel": "timeLabel", "t-timeHint": "timeHint",
       "t-timedOpen": "timedOpen", "t-alwaysNote": "alwaysNote",
       "t-keysRule": "keysRule", "t-keysWarn": "keysWarn",
       "t-keysExamples": "keysExamples", "t-logjukTip": "logjukTip",
-      "t-footer": "footer"
+      "t-footer": "footer",
+      "t-guideIntroTitle": "guideIntroTitle", "t-guideIntro": "guideIntro",
+      "t-guideLoopTitle": "guideLoopTitle", "t-guideLoop": "guideLoop",
+      "t-prepTitle": "prepTitle", "t-prepHint": "prepHint",
+      "t-threatsTitle": "threatsTitle", "t-threatsHint": "threatsHint"
     };
     Object.entries(map).forEach(([id, key]) => { $(id).textContent = t(key); });
     minuteInput.placeholder = "00";
@@ -235,6 +240,34 @@
           <div class="tier-cost">${costMap[key]}</div>
         </div>
         <ul class="miner-rows">${rows}</ul>
+      </div>`;
+    }).join("");
+  }
+
+  function renderGuide() {
+    $("prep-list").innerHTML = PREP_KEYS.map(k => `
+      <li class="prep-item">
+        <span class="prep-check">✓</span>
+        <span>${t(k)}</span>
+      </li>
+    `).join("");
+
+    const th = I18N[lang].threats;
+    const triggerLabel = lang === "tr" ? "Tetikleyici" : "Trigger";
+    const counterLabel = lang === "tr" ? "Karşı Hamle" : "Counter";
+    $("threat-grid").innerHTML = THREATS.map(threat => {
+      const info = th[threat.key];
+      return `<div class="threat-card" style="--tcolor:${threat.color}">
+        <div class="threat-head">
+          <span class="threat-dot"></span>
+          <h3>${info.name}</h3>
+        </div>
+        <div class="threat-body">
+          <p class="threat-label">${triggerLabel}</p>
+          <p class="threat-trigger">${info.trigger}</p>
+          <p class="threat-label">${counterLabel}</p>
+          <p class="threat-counter">${info.counter}</p>
+        </div>
       </div>`;
     }).join("");
   }

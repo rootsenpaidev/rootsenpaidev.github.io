@@ -134,6 +134,19 @@ const KEY_EXAMPLES = [
 
 const CAREFUL_SITES = ["The Bomb Maker"];
 
+const THREATS = [
+  { key: "tanner", color: "#ff6b6b" },
+  { key: "lucas", color: "#ffa94d" },
+  { key: "noir", color: "#a855f7" },
+  { key: "tucker", color: "#4dabf7" },
+  { key: "cletus", color: "#69db7c" },
+  { key: "kidnapper", color: "#f0a030" },
+  { key: "breather", color: "#9898a8" },
+  { key: "bombmaker", color: "#e02525" }
+];
+
+const PREP_KEYS = ["prep1", "prep2", "prep3", "prep4", "prep5", "prep6"];
+
 const ALL_SITES = [
   ...WEBSITES.always.map(s => ({ name: s, category: "always", careful: CAREFUL_SITES.includes(s) })),
   ...Object.values(WEBSITES.timed).flat().map(s => ({ name: s, category: "timed" })),
